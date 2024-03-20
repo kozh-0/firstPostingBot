@@ -20,7 +20,7 @@ bot.on(message("text"), async (ctx) => {
   ctx.reply("Отправлено: " + input);
 });
 
-let count = 0;
+let count = 17;
 const interval = setInterval(async () => {
   if (!facts[count]) {
     clearInterval(interval);
@@ -35,12 +35,12 @@ const interval = setInterval(async () => {
   ).then((res) => res.data);
 
   bot.telegram.sendPhoto(process.env.CHANNEL_NAME!, img[0].url, {
-    caption: `${facts[count].title}\n\n${facts[count].descr}`,
+    caption: `${count + 1}. ${facts[count].title}\n\n${facts[count].descr}`,
   });
 
   count += 1;
   console.log(count);
-}, 600000);
+}, 1800000);
 
 // bot.on("voice", (ctx) => ctx.reply("Какой чудный у вас голос 😉"));
 // bot.on("sticker", (ctx) => ctx.reply("Классный стикер 🙃"));
