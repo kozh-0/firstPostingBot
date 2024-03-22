@@ -3,22 +3,22 @@ import axios from "axios";
 const FOLDER_ID = process.env.FOLDER_ID;
 const YANDEXGPT_API_KEY = process.env.YANDEXGPT_API_KEY;
 
-const data = {
-  modelUri: `gpt://${FOLDER_ID}/yandexgpt-lite`,
-  completionOptions: {
-    stream: false,
-    temperature: 0.6,
-    maxTokens: "200",
-  },
-  messages: [
-    {
-      role: "system",
-      text: "Ты дружелюбный ассистент, расскажи один интересный факт о кошках",
+export async function generatePost(prompt: string) {
+  const data = {
+    modelUri: `gpt://${FOLDER_ID}/yandexgpt-lite`,
+    completionOptions: {
+      stream: false,
+      temperature: 0.6,
+      maxTokens: "1000",
     },
-  ],
-};
+    messages: [
+      {
+        role: "system",
+        text: `Ты дружелюбный ассистент, ${prompt}`,
+      },
+    ],
+  };
 
-export async function generateDogPost() {
   try {
     const response = await axios.post(
       "https://llm.api.cloud.yandex.net/foundationModels/v1/completion",

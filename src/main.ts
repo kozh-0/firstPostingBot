@@ -1,8 +1,8 @@
 import "dotenv/config";
 import { Telegraf } from "telegraf";
 import axios from "axios";
-import { generateDogPost } from "./getText";
 import { parse } from "./parser";
+import { cronTaskPlanner } from "./cron";
 
 const bot = new Telegraf(process.env.TG_KEY!, { handlerTimeout: 20000 });
 
@@ -19,12 +19,14 @@ const interval = setInterval(async () => {
   //   `https://dog.ceo/api/breeds/image/random`
   // ).then((res) => res.data);
   // console.log("В работе");
-  // const post = await generateDogPost();
+  // const post = await generatePost();
   // console.log("Получил, отправляю...", post);
   // bot.telegram.sendPhoto(process.env.DOGS_CHANNEL_NAME!, dogImg.message, {
   //   caption: post,
   // });
 }, 1800000);
+
+cronTaskPlanner(bot);
 
 bot.catch((err, ctx) => {
   console.error(err);
@@ -32,4 +34,3 @@ bot.catch((err, ctx) => {
 });
 
 bot.launch();
-console.log("Запустился");

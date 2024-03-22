@@ -1,14 +1,15 @@
 import { JSDOM } from "jsdom";
 import fs from "fs";
 
-let counter = 1;
+let counter = 4;
 let counter1 = 0;
-// Нужно добавить глобальный глобальный счетчик
 export async function parse(interval?: NodeJS.Timeout) {
+  // ПЕРЕД ЗАПУСКОМ ПРОЕКТА, НАДО В ФАЙЛЕ COUNTER.TXT ВЫСТАВИТЬ НОМЕР ПОСЛЕДНЕГО ПОСТА В ТГ КАНАЛЕ
+  // В ИДЕАЛЕ ХРАНИТЬ В ОНЛАЙН БД
   let DB_COUNTER = parseInt(fs.readFileSync("counter.txt", { encoding: "utf-8" }));
   DB_COUNTER += 1;
   fs.writeFileSync("counter.txt", JSON.stringify(DB_COUNTER));
-  console.log(DB_COUNTER);
+  console.log("DB_COUNTER", DB_COUNTER, "counter", counter, "counter1", counter1);
 
   //   1 сайт 50 фактов
   const document = await JSDOM.fromURL(
