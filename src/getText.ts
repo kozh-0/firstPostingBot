@@ -4,26 +4,16 @@ const FOLDER_ID = process.env.FOLDER_ID;
 const YANDEXGPT_API_KEY = process.env.YANDEXGPT_API_KEY;
 
 const data = {
-  modelUri: `gpt://${FOLDER_ID}/yandexgpt-lite/latest`,
+  modelUri: `gpt://${FOLDER_ID}/yandexgpt-lite`,
   completionOptions: {
     stream: false,
     temperature: 0.6,
-    maxTokens: "500",
+    maxTokens: "200",
   },
   messages: [
     {
-      // ХРЕНОВО РАБОТАЕТ, результат в 1% случаев, неправильный промпт?
       role: "system",
-      text: "Ты опытный кинолог и знаешь все факты о собаках",
-      // text: "Напиши один интересный факт о собаках с загаловком, нужно уложиться в 1024 символа",
-    },
-    // {
-    //   role: "assistant",
-    //   text: "Собаки очень милые и интересные создания",
-    // },
-    {
-      role: "assistant",
-      text: "Напиши один интересный факт о собаках с загаловком",
+      text: "Ты дружелюбный ассистент, расскажи один интересный факт о кошках",
     },
   ],
 };
