@@ -1,7 +1,7 @@
 import { JSDOM } from "jsdom";
 import fs from "fs";
 
-let counter = 6;
+let counter = 15;
 let counter1 = 0;
 export async function parse(interval: NodeJS.Timeout) {
   // ПЕРЕД ЗАПУСКОМ ПРОЕКТА, НАДО В ФАЙЛЕ COUNTER.TXT ВЫСТАВИТЬ НОМЕР ПОСЛЕДНЕГО ПОСТА В ТГ КАНАЛЕ

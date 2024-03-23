@@ -9,6 +9,7 @@ const bot = new Telegraf(process.env.TG_KEY!, { handlerTimeout: 20000 });
 const interval = setInterval(async () => {
   if (new Date().getHours() >= 0 && new Date().getHours() <= 8)
     return console.log(new Date(), "Ночь! Без постов.");
+
   const catImg: [{ id: string; url: string; width: number; height: number }] = await axios(
     `https://api.thecatapi.com/v1/images/search`
   ).then((res) => res.data);
@@ -26,7 +27,7 @@ const interval = setInterval(async () => {
   // bot.telegram.sendPhoto(process.env.DOGS_CHANNEL_NAME!, dogImg.message, {
   //   caption: post,
   // });
-}, 1800000);
+}, 3600000);
 
 cronTaskPlanner(bot);
 
