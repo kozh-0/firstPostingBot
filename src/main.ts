@@ -15,9 +15,10 @@ const interval = setInterval(async () => {
   ).then((res) => res.data);
 
   const caption = await parse(interval);
-
-  // bot.telegram.sendMessage(process.env.CATS_CHANNEL_NAME!, "caption");
+  console.log(caption);
+  
   bot.telegram.sendPhoto(process.env.CATS_CHANNEL_NAME!, catImg[0].url, { caption });
+  // bot.telegram.sendMessage(process.env.CATS_CHANNEL_NAME!, "caption");
 
   // const dogImg: { message: string; status: string } = await axios(
   //   `https://dog.ceo/api/breeds/image/random`
@@ -39,7 +40,7 @@ bot.catch((err, ctx) => {
 
 bot
   .launch()
-  .then((a) => {
+  .then(() => {
     console.log("Launched!");
   })
   .catch((err) => {

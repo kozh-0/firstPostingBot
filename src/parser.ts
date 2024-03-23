@@ -1,7 +1,7 @@
 import { JSDOM } from "jsdom";
 import fs from "fs";
 
-let counter = 21;
+let counter = 23;
 let counter1 = 0;
 export async function parse(interval: NodeJS.Timeout) {
   // ПЕРЕД ЗАПУСКОМ ПРОЕКТА, НАДО В ФАЙЛЕ COUNTER.TXT ВЫСТАВИТЬ НОМЕР ПОСЛЕДНЕГО ПОСТА В ТГ КАНАЛЕ
@@ -16,8 +16,8 @@ export async function parse(interval: NodeJS.Timeout) {
     "http://vet31.ru/useful_info/50-interesnykh-faktov-o-koshkakh/"
   ).then((dom) => dom.window.document);
 
-  const fact = ([...document.querySelectorAll(".news-detail li")][counter] as HTMLElement)
-    .innerText;
+  let fact = [...document.querySelectorAll(".news-detail li")][counter].innerHTML;
+  fact = fact.trim()
   if (fact) {
     counter += 1;
     return `${DB_COUNTER}. ${fact}`;
@@ -28,7 +28,7 @@ export async function parse(interval: NodeJS.Timeout) {
     (dom) => dom.window.document
   );
 
-  const fact1 = ([...document1.querySelectorAll(".post p")][counter1] as HTMLElement).innerText;
+  const fact1 = [...document1.querySelectorAll(".post p")][counter1].innerHTML;
   if (fact1) {
     counter1 += 1;
     // Нумерация в комплекте с сайта
