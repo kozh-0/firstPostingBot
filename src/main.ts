@@ -4,7 +4,7 @@ import axios from "axios";
 import { parse } from "./parser";
 import { cronTaskPlanner } from "./cron";
 
-const bot = new Telegraf(process.env.TG_KEY!, { handlerTimeout: 20000 });
+const bot = new Telegraf(process.env.TG_KEY!, { handlerTimeout: 30000 });
 
 const interval = setInterval(async () => {
   if (new Date().getHours() >= 0 && new Date().getHours() <= 8)
@@ -14,9 +14,10 @@ const interval = setInterval(async () => {
     `https://api.thecatapi.com/v1/images/search`
   ).then((res) => res.data);
 
-  bot.telegram.sendPhoto(process.env.CATS_CHANNEL_NAME!, catImg[0].url, {
-    caption: await parse(interval),
-  });
+  const caption = await parse(interval);
+
+  // bot.telegram.sendMessage(process.env.CATS_CHANNEL_NAME!, "caption");
+  bot.telegram.sendPhoto(process.env.CATS_CHANNEL_NAME!, catImg[0].url, { caption });
 
   // const dogImg: { message: string; status: string } = await axios(
   //   `https://dog.ceo/api/breeds/image/random`
@@ -32,8 +33,15 @@ const interval = setInterval(async () => {
 cronTaskPlanner(bot);
 
 bot.catch((err, ctx) => {
-  console.error(err);
+  console.error("asdasd", err);
   ctx.reply("Упс... Что-то пошло не так. Попробуйте снова.");
 });
 
-bot.launch();
+bot
+  .launch()
+  .then((a) => {
+    console.log("Launched!");
+  })
+  .catch((err) => {
+    console.log("Launch Error: ", JSON.stringify(err, null, 2));
+  });
