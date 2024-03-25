@@ -1,10 +1,18 @@
 import "dotenv/config";
+import { AI_GENERATE } from "./getText";
 import { Telegraf } from "telegraf";
 import axios from "axios";
 import { parse } from "./parser";
 import { cronTaskPlanner } from "./cron";
+import { unlink } from "fs/promises";
 
-const bot = new Telegraf(process.env.TG_KEY!, { handlerTimeout: 30000 });
+const bot = new Telegraf(process.env.TG_KEY!, { handlerTimeout: 40000 });
+
+// (async function () {
+//   const fact = await AI_GENERATE.yandex(
+//     "Расскажи один короткий и интересный факт о кошках, без предисловия, сразу факт"
+//   );
+// })();
 
 const interval = setInterval(async () => {
   if (new Date().getHours() >= 0 && new Date().getHours() <= 8)
@@ -14,20 +22,36 @@ const interval = setInterval(async () => {
     `https://api.thecatapi.com/v1/images/search`
   ).then((res) => res.data);
 
-  const caption = await parse(interval);
+  const caption = await AI_GENERATE.yandex(
+    "Расскажи один короткий и интересный факт о кошках, без предисловия, сразу факт"
+  );
+  // const caption = await parse(interval);
+
   console.log(caption);
-  
+
   bot.telegram.sendPhoto(process.env.CATS_CHANNEL_NAME!, catImg[0].url, { caption });
   // bot.telegram.sendMessage(process.env.CATS_CHANNEL_NAME!, "caption");
 
-  // const dogImg: { message: string; status: string } = await axios(
-  //   `https://dog.ceo/api/breeds/image/random`
-  // ).then((res) => res.data);
-  // console.log("В работе");
-  // const post = await generatePost();
-  // console.log("Получил, отправляю...", post);
-  // bot.telegram.sendPhoto(process.env.DOGS_CHANNEL_NAME!, dogImg.message, {
-  //   caption: post,
+  const dogImg: { message: string; status: string } = await axios(
+    `https://dog.ceo/api/breeds/image/random`
+  ).then((res) => res.data);
+
+  const fact = await AI_GENERATE.sberChat(
+    "Расскажи один короткий и интересный факт о собаках, без предисловия, сразу факт"
+  );
+  // const imgPath = await AI_GENERATE.sberPic(fact);
+
+  bot.telegram.sendPhoto(
+    process.env.DOGS_CHANNEL_NAME!,
+    { source: dogImg.message },
+    // { source: imgPath },
+    {
+      caption: fact,
+    }
+  );
+  // .then(async () => {
+  //   await unlink(imgPath);
+  //   console.log(`File ${imgPath} has been deleted.\n\n`);
   // });
 }, 3600000);
 

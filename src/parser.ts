@@ -1,7 +1,7 @@
 import { JSDOM } from "jsdom";
 import fs from "fs";
 
-let counter = 23;
+let counter = 38;
 let counter1 = 0;
 export async function parse(interval: NodeJS.Timeout) {
   // ПЕРЕД ЗАПУСКОМ ПРОЕКТА, НАДО В ФАЙЛЕ COUNTER.TXT ВЫСТАВИТЬ НОМЕР ПОСЛЕДНЕГО ПОСТА В ТГ КАНАЛЕ
@@ -17,7 +17,7 @@ export async function parse(interval: NodeJS.Timeout) {
   ).then((dom) => dom.window.document);
 
   let fact = [...document.querySelectorAll(".news-detail li")][counter].innerHTML;
-  fact = fact.trim()
+  fact = fact.trim();
   if (fact) {
     counter += 1;
     return `${DB_COUNTER}. ${fact}`;

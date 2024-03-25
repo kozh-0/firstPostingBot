@@ -1,7 +1,8 @@
 import cron from "node-cron";
 import { Context, Telegraf } from "telegraf";
 import { Update } from "telegraf/typings/core/types/typegram";
-import { generatePost } from "./getText";
+import { AI_GENERATE } from "./getText";
+import { unlink } from "fs/promises";
 
 //  ┌────────────── second (optional)
 //  │ ┌──────────── minute
@@ -40,14 +41,21 @@ export function cronTaskPlanner(bot: Telegraf<Context<Update>>) {
     "0 0 * * *",
     async () => {
       console.log(new Date(), "Спокойной ночи! 🌚");
-      const nightFact = await generatePost(
+      const nightFact = await AI_GENERATE.yandex(
         "Расскажи короткую сказку на ночь, где главные персонажи котики. Без предисловия, сразу начинай рассказ."
       );
+      const imgPath = await AI_GENERATE.sberPic(nightFact);
       try {
-        bot.telegram.sendMessage(
-          process.env.CATS_CHANNEL_NAME!,
-          `Пора спать🌚 Вот сказка, чтобы лучше спалось... \n\n${nightFact}`
-        );
+        bot.telegram
+          .sendPhoto(
+            process.env.CATS_CHANNEL_NAME!,
+            { source: imgPath },
+            { caption: `Пора спать🌚 Вот сказка, чтобы лучше спалось... \n\n${nightFact}` }
+          )
+          .then(async () => {
+            await unlink(imgPath);
+            console.log(`File ${imgPath} has been deleted.\n\n`);
+          });
       } catch (error: any) {
         console.error(new Date(), error.message);
       }
