@@ -6,3 +6,6 @@
 
 .env
 counter.txt
+
+imgs/*
+!imgs/.gitkeep

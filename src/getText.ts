@@ -7,7 +7,14 @@ const YANDEXGPT_API_KEY = process.env.YANDEXGPT_API_KEY!;
 class AI_GENERATE_CLASS {
   private readonly GIGACHAT: GigaChat;
   constructor() {
-    this.GIGACHAT = new GigaChat(process.env.GIGACHAT_AUTH_SECRET!, true, true, true);
+    this.GIGACHAT = new GigaChat(
+      process.env.GIGACHAT_AUTH_SECRET!,
+      true,
+      true,
+      true,
+      true,
+      "./imgs"
+    );
   }
 
   async sberChat(prompt: string) {
@@ -49,7 +56,7 @@ class AI_GENERATE_CLASS {
     return response.choices[0].message.image!;
   }
 
-  async yandex(prompt: string) {
+  async yandexChat(prompt: string) {
     const data = {
       modelUri: `gpt://${YANDEXGPT_FOLDER_ID}/yandexgpt-lite`,
       completionOptions: {

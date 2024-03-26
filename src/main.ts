@@ -8,11 +8,7 @@ import { unlink } from "fs/promises";
 
 const bot = new Telegraf(process.env.TG_KEY!, { handlerTimeout: 40000 });
 
-// (async function () {
-//   const fact = await AI_GENERATE.yandex(
-//     "Расскажи один короткий и интересный факт о кошках, без предисловия, сразу факт"
-//   );
-// })();
+// (async function () {})();
 
 const interval = setInterval(async () => {
   if (new Date().getHours() >= 0 && new Date().getHours() <= 8)
@@ -22,12 +18,10 @@ const interval = setInterval(async () => {
     `https://api.thecatapi.com/v1/images/search`
   ).then((res) => res.data);
 
-  const caption = await AI_GENERATE.yandex(
-    "Расскажи один короткий и интересный факт о кошках, без предисловия, сразу факт"
+  const caption = await AI_GENERATE.yandexChat(
+    "Расскажи один интересный факт о кошках, без предисловия. Факт должна быть короткий, до 1024 символов."
   );
   // const caption = await parse(interval);
-
-  console.log(caption);
 
   bot.telegram.sendPhoto(process.env.CATS_CHANNEL_NAME!, catImg[0].url, { caption });
   // bot.telegram.sendMessage(process.env.CATS_CHANNEL_NAME!, "caption");
@@ -37,13 +31,13 @@ const interval = setInterval(async () => {
   ).then((res) => res.data);
 
   const fact = await AI_GENERATE.sberChat(
-    "Расскажи один короткий и интересный факт о собаках, без предисловия, сразу факт"
+    "Расскажи один короткий и интересный факт о собаках, без предисловия. Факт должна быть короткий, до 1024 символов."
   );
   // const imgPath = await AI_GENERATE.sberPic(fact);
 
   bot.telegram.sendPhoto(
     process.env.DOGS_CHANNEL_NAME!,
-    { source: dogImg.message },
+    dogImg.message,
     // { source: imgPath },
     {
       caption: fact,
@@ -65,8 +59,8 @@ bot.catch((err, ctx) => {
 bot
   .launch()
   .then(() => {
-    console.log("Launched!");
+    console.log(new Date(), "Launched!");
   })
   .catch((err) => {
-    console.log("Launch Error: ", JSON.stringify(err, null, 2));
+    console.log(new Date(), "Launch Error: ", JSON.stringify(err, null, 2));
   });
