@@ -17,6 +17,13 @@ class AI_GENERATE_CLASS {
     );
   }
 
+  async taleGenerate(prompt: string) {
+    const tale: string = await AI_GENERATE.yandexChat(prompt);
+    const imgPath = await AI_GENERATE.sberPic(tale);
+
+    return { tale, imgPath };
+  }
+
   async sberChat(prompt: string) {
     try {
       await this.GIGACHAT.createToken();

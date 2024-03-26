@@ -15,12 +15,19 @@ import { unlink } from "fs/promises";
 //  * * * * * *
 // https://crontab.guru/
 
+const CHANNELS = [process.env.CATS_CHANNEL_NAME!, process.env.DOGS_CHANNEL_NAME!];
+
 export function cronTaskPlanner(bot: Telegraf<Context<Update>>) {
   cron.schedule(
     "0 9 * * *",
     () => {
       console.log(new Date(), "С добрым утром! 🌞");
-      bot.telegram.sendMessage(process.env.CATS_CHANNEL_NAME!, "С добрым утром 🌞");
+      CHANNELS.forEach(async (channel) => {
+        bot.telegram.sendMessage(
+          channel,
+          `С добрым утром, ${channel.includes("dog") ? "песики" : "котики"}! 🌞`
+        );
+      });
     },
     { timezone: "Asia/Yekaterinburg" }
   );
@@ -28,11 +35,10 @@ export function cronTaskPlanner(bot: Telegraf<Context<Update>>) {
   cron.schedule(
     "0 14 * * *",
     () => {
-      console.log(new Date(), "Не забудьте покушать!");
-      bot.telegram.sendMessage(
-        process.env.CATS_CHANNEL_NAME!,
-        "Хорошего дня!\n\n Не забудьте покушать 🍧🍨🧁🥞🧋"
-      );
+      console.log(new Date(), "Обед!");
+      CHANNELS.forEach(async (channel) => {
+        bot.telegram.sendMessage(channel, "Хорошего дня!\n\nНе забудьте покушать 🍧🍨🧁🥞🧋");
+      });
     },
     { timezone: "Asia/Yekaterinburg" }
   );
@@ -41,25 +47,30 @@ export function cronTaskPlanner(bot: Telegraf<Context<Update>>) {
     "0 0 * * *",
     async () => {
       console.log(new Date(), "Спокойной ночи! 🌚");
-      const nightFact = await AI_GENERATE.yandexChat(
-        "Расскажи милую сказку на ночь, где главные персонажи котики. Без предисловия, сразу начинай рассказ. Сказка должна быть короткая, до 3024 символов"
-      );
-      const imgPath = await AI_GENERATE.sberPic(nightFact);
-      try {
-        bot.telegram.sendPhoto(
-          process.env.CATS_CHANNEL_NAME!,
-          { source: imgPath },
-          { caption: "Пора спать🌚 Вот сказка, чтобы лучше спалось..." }
+
+      CHANNELS.forEach(async (channel) => {
+        const catOrDog = channel.includes("dog") ? "песики" : "котики";
+
+        const taleObj = await AI_GENERATE.taleGenerate(
+          `Расскажи милую сказку на ночь, где главные персонажи ${catOrDog}. Без предисловия, сразу начинай рассказ. Сказка должна быть короткая, до 3024 символов`
         );
-        // Отдельным сообщением т.к. с вложениями 1024 символа, просто текст - 4096
-        bot.telegram.sendMessage(process.env.CATS_CHANNEL_NAME!, nightFact);
-      } catch (error: any) {
-        console.error(new Date(), error.message);
-      } finally {
-        // Тут не отслеживается удален ли файл
-        await unlink(imgPath);
-        console.log(`File ${imgPath} has been deleted.\n\n`);
-      }
+
+        try {
+          await bot.telegram.sendPhoto(
+            channel,
+            { source: taleObj.imgPath },
+            { caption: "Пора спать🌚 Вот сказка, чтобы лучше спалось..." }
+          );
+          // Отдельным сообщением т.к. с вложениями 1024 символа, просто текст - 4096
+          await bot.telegram.sendMessage(channel, taleObj.tale);
+        } catch (error: any) {
+          console.error(new Date(), error.message);
+        } finally {
+          // Тут не отслеживается удален ли файл
+          await unlink(taleObj.imgPath);
+          console.log(`File ${taleObj.imgPath} has been deleted.\n\n`);
+        }
+      });
     },
     { timezone: "Asia/Yekaterinburg" }
   );
