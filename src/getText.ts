@@ -51,7 +51,7 @@ class AI_GENERATE_CLASS {
       messages: [
         {
           role: "system",
-          text: `Ты дружелюбный ассистент, ${prompt}`,
+          text: prompt,
         },
       ],
     };

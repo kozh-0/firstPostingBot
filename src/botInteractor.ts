@@ -6,17 +6,22 @@ import { unlink } from "fs/promises";
 export default async function botInteractor(bot: Telegraf<Context<Update>>) {
   // Взаимодействие с ботом
   bot.on("text", async (ctx) => {
+    if (ctx.message.chat.id !== parseInt(process.env.USER_TG_ID!)) {
+      return await ctx.reply("Доступ запрещен");
+    }
+
     const input = ctx.message.text.trim();
     if (input.toLowerCase() === "ау") return ctx.reply("Я фурычу!");
-    ctx.sendChatAction("typing");
 
     if (input.toLowerCase().startsWith("yandex")) {
+      ctx.sendChatAction("typing");
       console.log("yandex");
       const res = await AI_GENERATE.yandexChat(input);
       return ctx.reply(res);
     }
 
     if (input.toLowerCase().startsWith("sber")) {
+      ctx.sendChatAction("typing");
       console.log("sber");
       const res = await AI_GENERATE.sberChat(input);
       console.log(res);
