@@ -2,14 +2,13 @@ import "dotenv/config";
 import { AI_GENERATE } from "./getText";
 import { Telegraf } from "telegraf";
 import axios from "axios";
-import { cronTaskPlanner } from "./cron";
+import cronTaskPlanner from "./cron";
 import fs from "fs";
+import botInteractor from "./botInteractor";
 
 const bot = new Telegraf(process.env.TG_KEY!, { handlerTimeout: 40000 });
 
-// (async function () {
-//   bot.telegram.sendMessage(process.env.CATS_CHANNEL_NAME!, "caption");
-// })();
+// (async function () {})();
 
 async function kotikPost() {
   const catImg: [{ id: string; url: string; width: number; height: number }] = await axios(
@@ -17,7 +16,7 @@ async function kotikPost() {
   ).then((res) => res.data);
 
   const fact = await AI_GENERATE.yandexChat(
-    "Расскажи один интересный факт о кошках, без предисловия. Факт должна быть короткий, до 1024 символов."
+    "Расскажи один оригинальный факт о кошках, без предисловия. Факт должна быть короткий и отличающийся от предыдущего, до 1024 символов."
   );
 
   let DB_COUNTER = parseInt(fs.readFileSync("counter.txt", { encoding: "utf-8" })) + 1;
@@ -34,8 +33,8 @@ async function pesikPost() {
     `https://dog.ceo/api/breeds/image/random`
   ).then((res) => res.data);
 
-  const fact = await AI_GENERATE.sberChat(
-    "Расскажи один короткий и интересный факт о собаках, без предисловия. Факт должна быть короткий, до 1024 символов."
+  const fact = await AI_GENERATE.yandexChat(
+    "Расскажи один оригинальный факт о собаках, без предисловия. Факт должна быть короткий и отличающийся от предыдущего, до 1024 символов."
   );
 
   bot.telegram.sendPhoto(process.env.DOGS_CHANNEL_NAME!, dogImg.message, {
@@ -51,12 +50,8 @@ setInterval(async () => {
   await pesikPost();
 }, 3600000);
 
+botInteractor(bot);
 cronTaskPlanner(bot);
-
-bot.catch((err, ctx) => {
-  console.error("asdasd", err);
-  ctx.reply("Что-то пошло совсем не так...");
-});
 
 bot
   .launch()

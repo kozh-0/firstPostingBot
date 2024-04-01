@@ -19,48 +19,25 @@ class AI_GENERATE_CLASS {
 
   async taleGenerate(prompt: string) {
     const tale: string = await AI_GENERATE.yandexChat(prompt);
-    const imgPath = await AI_GENERATE.sberPic(tale);
+    const imgPath = (await AI_GENERATE.sberChat(`Нарисуй: ${tale}`)).image!;
 
     return { tale, imgPath };
   }
 
   async sberChat(prompt: string) {
-    try {
-      await this.GIGACHAT.createToken();
-
-      const response = await this.GIGACHAT.completion({
-        model: "GigaChat:latest",
-        messages: [
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-      });
-
-      console.log(response.choices[0].message);
-      return response.choices[0].message.content;
-    } catch (error) {
-      console.log(error);
-      return "Что-то пошло не так...";
-    }
-  }
-
-  async sberPic(prompt: string) {
     await this.GIGACHAT.createToken();
-
     const response = await this.GIGACHAT.completion({
       model: "GigaChat:latest",
       messages: [
         {
           role: "user",
-          content: `Нарисуй: ${prompt}`,
+          content: prompt,
         },
       ],
     });
 
-    console.log("img", response.choices[0].message);
-    return response.choices[0].message.image!;
+    console.log(response.choices[0].message, "\n");
+    return response.choices[0].message;
   }
 
   async yandexChat(prompt: string) {
@@ -91,12 +68,12 @@ class AI_GENERATE_CLASS {
         }
       );
       console.log(response.status, new Date());
-      console.log(JSON.stringify(response.data, null, 2));
+      console.log(JSON.stringify(response.data.result.alternatives, null, 2));
 
       return response.data.result.alternatives[0].message.text ?? "Что-то пошло не так...";
     } catch (err: any) {
       console.error("error:", err.message);
-      return "Фатальная ошибка";
+      return err.message;
     }
   }
 }

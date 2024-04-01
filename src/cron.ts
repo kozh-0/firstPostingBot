@@ -17,7 +17,7 @@ import { unlink } from "fs/promises";
 
 const CHANNELS = [process.env.CATS_CHANNEL_NAME!, process.env.DOGS_CHANNEL_NAME!];
 
-export function cronTaskPlanner(bot: Telegraf<Context<Update>>) {
+export default function cronTaskPlanner(bot: Telegraf<Context<Update>>) {
   cron.schedule(
     "0 9 * * *",
     () => {
@@ -48,7 +48,9 @@ export function cronTaskPlanner(bot: Telegraf<Context<Update>>) {
     async () => {
       console.log(new Date(), "Спокойной ночи! 🌚");
 
-      CHANNELS.forEach(async (channel) => {
+      // Потому-что for of ожидает асинхронные операции, а методы цикла - синхронны и ничего не ждут
+      // CHANNELS.forEach(async (channel) => {
+      for (const channel of CHANNELS) {
         const catOrDog = channel.includes("dog") ? "песики" : "котики";
 
         const taleObj = await AI_GENERATE.taleGenerate(
@@ -70,7 +72,7 @@ export function cronTaskPlanner(bot: Telegraf<Context<Update>>) {
           await unlink(taleObj.imgPath);
           console.log(`File ${taleObj.imgPath} has been deleted.\n\n`);
         }
-      });
+      }
     },
     { timezone: "Asia/Yekaterinburg" }
   );
