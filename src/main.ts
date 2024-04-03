@@ -22,7 +22,9 @@ async function kotikPost() {
   let DB_COUNTER = parseInt(fs.readFileSync("counter.txt", { encoding: "utf-8" })) + 1;
 
   bot.telegram
-    .sendPhoto(process.env.CATS_CHANNEL_NAME!, catImg[0].url, { caption: `${DB_COUNTER}. ${fact}` })
+    .sendPhoto(process.env.CATS_CHANNEL_NAME!, catImg[0].url, {
+      caption: `${DB_COUNTER}. ${fact.toLowerCase().includes("звук") ? fact + "\n\n#Звуки" : fact}`,
+    })
     .then(() => {
       fs.writeFileSync("counter.txt", JSON.stringify(DB_COUNTER));
     });
