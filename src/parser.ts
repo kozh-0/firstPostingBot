@@ -3,7 +3,7 @@ import fs from "fs";
 
 let counter = 38;
 let counter1 = 0;
-export async function parse(interval: NodeJS.Timeout) {
+async function parse(interval: NodeJS.Timeout) {
   // ПЕРЕД ЗАПУСКОМ ПРОЕКТА, НАДО В ФАЙЛЕ COUNTER.TXT ВЫСТАВИТЬ НОМЕР ПОСЛЕДНЕГО ПОСТА В ТГ КАНАЛЕ
   // В ИДЕАЛЕ ХРАНИТЬ В ОНЛАЙН БД
   let DB_COUNTER = parseInt(fs.readFileSync("counter.txt", { encoding: "utf-8" }));

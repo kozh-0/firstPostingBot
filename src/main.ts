@@ -21,7 +21,7 @@ async function kotikPost() {
 
   let DB_COUNTER = parseInt(fs.readFileSync("counter.txt", { encoding: "utf-8" })) + 1;
 
-  bot.telegram
+  await bot.telegram
     .sendPhoto(process.env.CATS_CHANNEL_NAME!, catImg[0].url, {
       caption: `${DB_COUNTER}. ${fact.toLowerCase().includes("звук") ? fact + "\n\n#Звуки" : fact}`,
     })
@@ -39,7 +39,7 @@ async function pesikPost() {
     "Расскажи один оригинальный факт о собаках, без предисловия. Факт должна быть короткий и отличающийся от предыдущего, до 1024 символов."
   );
 
-  bot.telegram.sendPhoto(process.env.DOGS_CHANNEL_NAME!, dogImg.message, {
+  await bot.telegram.sendPhoto(process.env.DOGS_CHANNEL_NAME!, dogImg.message, {
     caption: fact,
   });
 }
@@ -50,7 +50,7 @@ setInterval(async () => {
 
   await kotikPost();
   await pesikPost();
-}, 3600000);
+}, 7200000);
 
 botInteractor(bot);
 cronTaskPlanner(bot);
