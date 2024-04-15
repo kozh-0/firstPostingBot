@@ -6,9 +6,8 @@ import cronTaskPlanner from "./cron";
 import fs from "fs";
 import botInteractor from "./botInteractor";
 
-const bot = new Telegraf(process.env.TG_KEY!, { handlerTimeout: 40000 });
-
 // (async function () {})();
+const bot = new Telegraf(process.env.TG_KEY!, { handlerTimeout: 40000 });
 
 async function kotikPost() {
   const catImg: [{ id: string; url: string; width: number; height: number }] = await axios(

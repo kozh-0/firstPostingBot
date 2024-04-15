@@ -2,6 +2,7 @@ import { Context, Telegraf } from "telegraf";
 import { Update } from "telegraf/typings/core/types/typegram";
 import { AI_GENERATE } from "./getText";
 import { unlink } from "fs/promises";
+import { getWeather } from "./getWeather";
 
 export default async function botInteractor(bot: Telegraf<Context<Update>>) {
   // Взаимодействие с ботом
@@ -12,6 +13,7 @@ export default async function botInteractor(bot: Telegraf<Context<Update>>) {
 
     const input = ctx.message.text.trim();
     if (input.toLowerCase() === "ау") return ctx.reply("Я фурычу!");
+    if (input.toLowerCase() === "погода") return ctx.reply(await getWeather());
 
     if (input.toLowerCase().startsWith("yandex")) {
       ctx.sendChatAction("typing");

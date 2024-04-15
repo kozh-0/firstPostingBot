@@ -3,6 +3,7 @@ import { Context, Telegraf } from "telegraf";
 import { Update } from "telegraf/typings/core/types/typegram";
 import { AI_GENERATE } from "./getText";
 import { unlink } from "fs/promises";
+import { getWeather } from "./getWeather";
 
 //  ┌────────────── second (optional)
 //  │ ┌──────────── minute
@@ -20,12 +21,13 @@ const CHANNELS = [process.env.CATS_CHANNEL_NAME!, process.env.DOGS_CHANNEL_NAME!
 export default function cronTaskPlanner(bot: Telegraf<Context<Update>>) {
   cron.schedule(
     "0 9 * * *",
-    () => {
+    async () => {
       console.log(new Date(), "С добрым утром! 🌞");
+
       CHANNELS.forEach(async (channel) => {
         bot.telegram.sendMessage(
           channel,
-          `С добрым утром, ${channel.includes("dog") ? "песики" : "котики"}! 🌞`
+          `С добрым утром, ${channel.includes("dog") ? "песики" : "котики"}! 🌞\n\n${await getWeather()}`
         );
       });
     },
@@ -34,10 +36,14 @@ export default function cronTaskPlanner(bot: Telegraf<Context<Update>>) {
 
   cron.schedule(
     "0 14 * * *",
-    () => {
+    async () => {
       console.log(new Date(), "Обед!");
+      const recomendation = await AI_GENERATE.sberChat("Расскажи что съесть на обед");
       CHANNELS.forEach(async (channel) => {
-        bot.telegram.sendMessage(channel, "Хорошего дня!\n\nНе забудьте покушать 🍧🍨🧁🥞🧋");
+        bot.telegram.sendMessage(
+          channel,
+          `Хорошего дня!\nНе забудьте покушать 🍧🍨🧁🥞🧋\n\n${recomendation}`
+        );
       });
     },
     { timezone: "Asia/Yekaterinburg" }

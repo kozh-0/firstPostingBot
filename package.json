@@ -22,6 +22,7 @@
     "@types/jsdom": "^21.1.6",
     "@types/node-cron": "^3.0.11",
     "axios": "^1.6.8",
+    "dedent": "^1.5.3",
     "dotenv": "^16.4.5",
     "gigachat-node": "^2.1.1",
     "jsdom": "^24.0.0",
