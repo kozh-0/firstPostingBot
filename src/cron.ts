@@ -38,11 +38,11 @@ export default function cronTaskPlanner(bot: Telegraf<Context<Update>>) {
     "0 14 * * *",
     async () => {
       console.log(new Date(), "Обед!");
-      const recomendation = await AI_GENERATE.sberChat("Расскажи что съесть на обед");
+      const { content } = await AI_GENERATE.sberChat("Что съесть на обед, дай одну рекомендацию");
       CHANNELS.forEach(async (channel) => {
         bot.telegram.sendMessage(
           channel,
-          `Хорошего дня!\nНе забудьте покушать 🍧🍨🧁🥞🧋\n\n${recomendation}`
+          `Хорошего дня!\nНе забудьте покушать 🍧🍨🧁🥞🧋\n\n${content}`
         );
       });
     },
