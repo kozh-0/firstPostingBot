@@ -1,6 +1,8 @@
-Должна быть создана папка imgs и файл counter.txt с указание числа последнего поста в тг канале
+Cats channel - https://t.me/kittiesFacts
+Dogs channel - https://t.me/doggiesFacts
 
-Нужно заполнить .env
+Должна быть создана папка imgs и файл counter.txt с указание числа последнего поста в тг канале
+Также нужно заполнить .env файл
 
 ```sh
 USER_TG_ID=
