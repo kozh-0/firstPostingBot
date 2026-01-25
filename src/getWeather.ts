@@ -1,5 +1,4 @@
 import axios from "axios";
-import dedent from "dedent";
 
 const getIcon = (icon: string) => {
   switch (icon.slice(0, -1)) {
@@ -40,12 +39,11 @@ export const getWeather = async () => {
   //   `https://api.openweathermap.org/data/2.5/weather?lat=54,7431&lon=55,9678&appid=${process.env.OPEN_WEATHER_API_KEY}`
   // );
 
-  return dedent`Погода в городе ${data.name}
-      ${getIcon(data.weather[0].icon)} ${data.weather[0].description[0].toUpperCase() + data.weather[0].description.substring(1)}, ${data.main.temp} °C
-      🌡️ Ощущается как ${data.main.feels_like} °C, Максимум ${data.main.temp_max} °C
-      🌊 Влажность: ${data.main.humidity} %
-      🌫️ Скорость ветра: ${data.wind.speed} м/с
-      `;
+  return `Погода в городе ${data.name}
+${getIcon(data.weather[0].icon)} ${data.weather[0].description[0].toUpperCase() + data.weather[0].description.substring(1)}, ${data.main.temp} °C
+🌡️ Ощущается как ${data.main.feels_like} °C, Максимум ${data.main.temp_max} °C
+🌊 Влажность: ${data.main.humidity} %
+🌫️ Скорость ветра: ${data.wind.speed} м/с`;
 };
 
 interface OpenWeatherI {

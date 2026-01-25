@@ -7,5 +7,5 @@
 .env
 counter.txt
 
-imgs/*
-!imgs/.gitkeep
+img/*
+!img/.gitkeep
