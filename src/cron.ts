@@ -55,7 +55,7 @@ const CHANNELS = [process.env.CATS_CHANNEL_NAME!, process.env.DOGS_CHANNEL_NAME!
 
 export default function cronTaskPlanner(bot: Telegraf<Context<Update>>) {
   cron.schedule(
-    "0 9,12,15,18,20 * * *",
+    "0 9,12,15,18,21 * * *",
     async () => {
       console.log(new Date(), "Рассылка фактов");
       await kotikPost(bot);
