@@ -9,7 +9,7 @@
   "scripts": {
     "start": "rm -rf dist && tsc && node dist/main.js",
     "dev": "nodemon src/main.ts",
-    "pm2": "npx pm2 delete main & rm -rf dist & tsc && npx pm2 start dist/main.js"
+    "pm2": "npx pm2 delete postingBot & rm -rf dist & tsc && npx pm2 start dist/main.js --name postingBot"
   },
   "devDependencies": {
     "node-cron": "^3.0.3",
